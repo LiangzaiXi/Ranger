@@ -1948,14 +1948,14 @@
                 });
             }
         }
-        window.buyWeapon = function (id, type) { if (gameState.gold >= WEAPON_TEMPLATES.find(w => w.id === id).unlockCost) { gameState.gold -= WEAPON_TEMPLATES.find(w => w.id === id).unlockCost; gameState.weaponLevels[id] = 1; equipWeapon(id, type); } };
-        window.upgradeWeapon = function (id, cost) { if (gameState.gold >= cost) { gameState.gold -= cost; gameState.weaponLevels[id]++; renderShopContent(); updateHUD(); } };
-        window.equipWeapon = function (id, type) { if (type === 'melee') gameState.equippedMelee = id; else gameState.equippedRanged = id; buildWeaponModel(); renderShopContent(); updateHUD(); };
-        window.buySkill = function (id) { const s = SKILL_TEMPLATES.find(x => x.id === id); if (gameState.gold >= s.cost) { gameState.gold -= s.cost; gameState.skillLevels[id] = 1; renderShopContent(); updateHUD(); } };
-        window.upgradeSkill = function (id, cost) { if (gameState.gold >= cost) { gameState.gold -= cost; gameState.skillLevels[id]++; renderShopContent(); updateHUD(); } };
-        window.equipSkill = function (id, slot) { for (let i = 0; i < 3; i++) if (gameState.skillSlots[i] === id) gameState.skillSlots[i] = null; gameState.skillSlots[slot] = id; renderShopContent(); updateSkillHUD(); };
-        window.unequipSkill = function (slot) { gameState.skillSlots[slot] = null; renderShopContent(); updateSkillHUD(); };
-        window.buyAttrUpgrade = function (id, cost) { if (gameState.gold >= cost) { gameState.gold -= cost; UPGRADES.find(u => u.id === id).currentLvl++; applyUpgrade(id); renderShopContent(); updateHUD(); } };
+        window.buyWeapon = function (id, type) { if (gameState.gold >= WEAPON_TEMPLATES.find(w => w.id === id).unlockCost) { gameState.gold -= WEAPON_TEMPLATES.find(w => w.id === id).unlockCost; gameState.weaponLevels[id] = 1; equipWeapon(id, type); saveGame(); } };
+        window.upgradeWeapon = function (id, cost) { if (gameState.gold >= cost) { gameState.gold -= cost; gameState.weaponLevels[id]++; renderShopContent(); updateHUD(); saveGame(); } };
+        window.equipWeapon = function (id, type) { if (type === 'melee') gameState.equippedMelee = id; else gameState.equippedRanged = id; buildWeaponModel(); renderShopContent(); updateHUD(); saveGame(); };
+        window.buySkill = function (id) { const s = SKILL_TEMPLATES.find(x => x.id === id); if (gameState.gold >= s.cost) { gameState.gold -= s.cost; gameState.skillLevels[id] = 1; renderShopContent(); updateHUD(); saveGame(); } };
+        window.upgradeSkill = function (id, cost) { if (gameState.gold >= cost) { gameState.gold -= cost; gameState.skillLevels[id]++; renderShopContent(); updateHUD(); saveGame(); } };
+        window.equipSkill = function (id, slot) { for (let i = 0; i < 3; i++) if (gameState.skillSlots[i] === id) gameState.skillSlots[i] = null; gameState.skillSlots[slot] = id; renderShopContent(); updateSkillHUD(); saveGame(); };
+        window.unequipSkill = function (slot) { gameState.skillSlots[slot] = null; renderShopContent(); updateSkillHUD(); saveGame(); };
+        window.buyAttrUpgrade = function (id, cost) { if (gameState.gold >= cost) { gameState.gold -= cost; UPGRADES.find(u => u.id === id).currentLvl++; applyUpgrade(id); renderShopContent(); updateHUD(); saveGame(); } };
         function applyUpgrade(id) {
             if (id === 'dmg') gameState.statsMult.dmg += 0.15; if (id === 'spd') gameState.statsMult.spd += 0.1;
             if (id === 'hp') { gameState.maxHealth += 20; gameState.health += 20; }
