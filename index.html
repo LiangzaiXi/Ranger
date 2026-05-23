@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>レンジャー</title>
     <style>
         :root {
@@ -47,7 +47,6 @@
             justify-content: space-between;
         }
 
-        /* 照准器 */
         #crosshair {
             position: absolute;
             top: 50%;
@@ -150,7 +149,6 @@
             }
         }
 
-        /* HUD */
         #hud {
             padding: 20px;
             display: flex;
@@ -232,7 +230,6 @@
             transition: opacity 0.2s;
         }
 
-        /* 武器スロット表示 */
         .weapon-slot {
             padding: 8px 12px;
             border: 2px solid #555;
@@ -252,7 +249,6 @@
             box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
 
-        /* スキルバー */
         #skill-hud {
             display: flex;
             gap: 15px;
@@ -303,7 +299,6 @@
             z-index: 2;
         }
 
-        /* メニュー & ショップ */
         .menu-overlay {
             position: absolute;
             top: 0;
@@ -489,12 +484,122 @@
             background: var(--primary-color);
             border-radius: 4px;
         }
+
+        /* ==========================================
+           📱 移动端竖屏强行拦截遮罩
+           ========================================== */
+        #portrait-lock {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a120c;
+            z-index: 999999;
+            color: #d4af37;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        @media screen and (max-width: 900px) and (orientation: portrait) {
+            #portrait-lock {
+                display: flex !important;
+            }
+
+            #game-container,
+            #ui-layer,
+            .menu-overlay {
+                display: none !important;
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .menu-panel {
+                width: 95vw !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+                padding: 15px !important;
+            }
+
+            .shop-content {
+                max-height: none !important;
+                overflow-y: visible !important;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <div id="portrait-lock">
+        <div style="font-size: 60px; margin-bottom: 20px; animation: rotateAnim 2s infinite;">🔄</div>
+        <div>画面を横にしてください</div>
+        <div style="font-size: 16px; color: #aaa; margin-top: 15px;">(请将手机旋转至横屏以进行游戏)</div>
+        <style>
+            @keyframes rotateAnim {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                50% {
+                    transform: rotate(-90deg);
+                }
+
+                100% {
+                    transform: rotate(-90deg);
+                }
+            }
+        </style>
+    </div>
     <div id="game-container"></div>
     <div id="ui-layer">
+        <div id="mobile-ui"
+            style="display: none; position: absolute; top:0; left:0; width: 100%; height: 100%; pointer-events: none; z-index: 100;">
+            <div id="touch-look-zone"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto; touch-action: none; z-index: 1;">
+            </div>
+            <div id="joystick-zone"
+                style="position: absolute; bottom: 40px; left: 40px; width: 130px; height: 130px; background: rgba(255,255,255,0.1); border-radius: 50%; pointer-events: auto; touch-action: none; border: 2px solid rgba(255,255,255,0.3); z-index: 10;">
+                <div id="joystick-knob"
+                    style="position: absolute; top: 35px; left: 35px; width: 60px; height: 60px; background: rgba(255,255,255,0.6); border-radius: 50%; pointer-events: none; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+                </div>
+            </div>
+            <div
+                style="position: absolute; bottom: 0; right: 0; width: 320px; height: 280px; pointer-events: auto; z-index: 10; user-select: none;">
+                <div
+                    style="position: absolute; top: -60px; right: 20px; display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+                    <div style="display: flex; gap: 8px;">
+                        <button id="mob-btn-w1"
+                            style="padding: 8px 12px; border-radius: 6px; background: rgba(0,0,0,0.7); color: #d4af37; border: 1px solid #d4af37; font-weight: bold; font-size: 12px;">近接</button>
+                        <button id="mob-btn-w2"
+                            style="padding: 8px 12px; border-radius: 6px; background: rgba(0,0,0,0.7); color: #4da6ff; border: 1px solid #4da6ff; font-weight: bold; font-size: 12px;">遠距離</button>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+                        <button id="mob-btn-q"
+                            style="width: 45px; height: 45px; border-radius: 8px; background: rgba(255,50,50,0.6); color: white; border: 1px solid white; font-weight: bold; font-size: 12px;">空</button>
+                        <button id="mob-btn-e"
+                            style="width: 45px; height: 45px; border-radius: 8px; background: rgba(50,255,50,0.6); color: white; border: 1px solid white; font-weight: bold; font-size: 12px;">空</button>
+                        <button id="mob-btn-r"
+                            style="width: 45px; height: 45px; border-radius: 8px; background: rgba(50,50,255,0.6); color: white; border: 1px solid white; font-weight: bold; font-size: 12px;">空</button>
+                    </div>
+                </div>
+                <div
+                    style="position: absolute; bottom: 100px; right: 20px; display: flex; flex-direction: row; align-items: center; gap: 15px;">
+                    <button id="mob-btn-atk"
+                        style="width: 95px; height: 95px; border-radius: 50%; background: rgba(212, 175, 55, 0.7); color: white; border: 4px solid white; font-size: 20px; font-weight: bold; box-shadow: 0 0 15px rgba(212, 175, 55, 0.9);">攻撃</button>
+                    <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
+                        <button id="mob-btn-block"
+                            style="width: 65px; height: 65px; border-radius: 50%; background: rgba(100,150,255,0.5); color: white; border: 2px solid white; font-size: 13px; font-weight: bold;">ガード</button>
+                        <button id="mob-btn-jump"
+                            style="width: 65px; height: 65px; border-radius: 50%; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; font-size: 13px; font-weight: bold;">ジャンプ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="damage-overlay"></div>
         <div id="effect-overlay"></div>
         <div id="crosshair">
@@ -639,6 +744,7 @@
             statsMult: { dmg: 1.0, spd: 1.0 }, enemiesToSpawn: 0, enemiesAlive: 0, spawnTimer: 0, arrowRains: [], totalSpawned: 0,
             weaponCDs: {}
         };
+        let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         let _internalGold = 0;
         Object.defineProperty(gameState, 'gold', {
             get: function () {
@@ -764,7 +870,7 @@
             playerShadowMesh.castShadow = true; playerShadowMesh.receiveShadow = false;
             playerShadowMesh.material.colorWrite = false; playerShadowMesh.material.depthWrite = false;
             scene.add(playerShadowMesh);
-            createEnvironment(); loadGame(); buildWeaponModel(); setupInput(); setupUIEvents();
+            createEnvironment(); loadGame(); buildWeaponModel(); setupInput(); setupUIEvents(); setupMobileUI();
             window.addEventListener('resize', onWindowResize, false); requestAnimationFrame(animate);
             window.addEventListener('contextmenu', e => e.preventDefault());
         }
@@ -1406,7 +1512,7 @@
                 if (e.code === 'ShiftLeft') keys.shift = false;
             });
             document.addEventListener('mousemove', (e) => {
-                if (!isPlaying || document.pointerLockElement !== document.body) return;
+                if (!isPlaying || (!isMobile && document.pointerLockElement !== document.body)) return;
                 const sensitivity = 0.002; player.yaw -= e.movementX * sensitivity; player.pitch -= e.movementY * sensitivity;
                 player.pitch = Math.max(-Math.PI / 2 + 0.1, Math.min(Math.PI / 2 - 0.1, player.pitch));
             });
@@ -1414,7 +1520,7 @@
                 if (!isPlaying) return;
                 if (!audioCtx) initAudio();
                 if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-                if (document.pointerLockElement !== document.body) { document.body.requestPointerLock(); return; }
+                if (!isMobile && document.pointerLockElement !== document.body) { document.body.requestPointerLock(); return; }
                 if (e.button === 2) {
                     const stats = getWeaponStats(getActiveWeaponId());
                     if (stats.type === 'melee') { player.isBlocking = true; player.blockStartTime = performance.now(); }
@@ -1536,12 +1642,109 @@
                 }
             });
         }
+        function setupMobileUI() {
+            if (!isMobile) return;
+            const wpnSlots = document.getElementById('weapon-slots-ui');
+            if (wpnSlots) wpnSlots.style.display = 'none';
+            const skillHud = document.getElementById('skill-hud');
+            if (skillHud) skillHud.style.display = 'none';
+            const zone = document.getElementById('joystick-zone');
+            const knob = document.getElementById('joystick-knob');
+            let joyActive = false, joyId = null, joyCenter = { x: 0, y: 0 };
+            zone.addEventListener('touchstart', (e) => {
+                e.preventDefault(); const touch = e.changedTouches[0]; joyId = touch.identifier; joyActive = true;
+                const rect = zone.getBoundingClientRect(); joyCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+                updateJoystick(touch.clientX, touch.clientY);
+            }, { passive: false });
+            zone.addEventListener('touchmove', (e) => {
+                if (!joyActive) return;
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === joyId) { updateJoystick(e.changedTouches[i].clientX, e.changedTouches[i].clientY); break; }
+                }
+            }, { passive: false });
+            const resetJoy = (e) => {
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === joyId) {
+                        joyActive = false; joyId = null; knob.style.transform = `translate(0px, 0px)`;
+                        keys.w = false; keys.s = false; keys.a = false; keys.d = false; keys.shift = false; break;
+                    }
+                }
+            };
+            zone.addEventListener('touchend', resetJoy); zone.addEventListener('touchcancel', resetJoy);
+            function updateJoystick(tx, ty) {
+                let dx = tx - joyCenter.x; let dy = ty - joyCenter.y; const maxR = 35; const dist = Math.hypot(dx, dy);
+                if (dist > maxR) { dx = (dx / dist) * maxR; dy = (dy / dist) * maxR; }
+                knob.style.transform = `translate(${dx}px, ${dy}px)`;
+                const nx = dx / maxR; const ny = dy / maxR; const threshold = 0.3;
+                keys.w = ny < -threshold; keys.s = ny > threshold; keys.a = nx < -threshold; keys.d = nx > threshold;
+                keys.shift = (dist > maxR * 0.8);
+            }
+            let lookId = null, lastLookX = 0, lastLookY = 0;
+            const uiContainer = document.getElementById('mobile-ui');
+            uiContainer.addEventListener('touchstart', (e) => {
+                const touch = e.changedTouches[0];
+                if (touch.clientX < window.innerWidth * 0.4) return;
+                lookId = touch.identifier;
+                lastLookX = touch.clientX;
+                lastLookY = touch.clientY;
+            }, { passive: true });
+            uiContainer.addEventListener('touchmove', (e) => {
+                if (!isPlaying || lookId === null) return;
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === lookId) {
+                        const touch = e.changedTouches[i];
+                        const dx = touch.clientX - lastLookX; const dy = touch.clientY - lastLookY;
+                        lastLookX = touch.clientX; lastLookY = touch.clientY;
+                        const sensitivity = 0.015;
+                        player.yaw -= dx * sensitivity;
+                        player.pitch -= dy * sensitivity;
+                        player.pitch = Math.max(-Math.PI / 2 + 0.1, Math.min(Math.PI / 2 - 0.1, player.pitch));
+                        break;
+                    }
+                }
+            }, { passive: true });
+            uiContainer.addEventListener('touchend', (e) => {
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === lookId) lookId = null;
+                }
+            }, { passive: true });
+            const bindBtn = (id, actionDown, actionUp) => {
+                const btn = document.getElementById(id); if (!btn) return;
+                btn.addEventListener('touchstart', (e) => {
+                    btn.style.transform = 'scale(0.85)';
+                    if (actionDown) actionDown();
+                }, { passive: true });
+                btn.addEventListener('touchend', (e) => {
+                    btn.style.transform = 'scale(1)';
+                    if (actionUp) actionUp();
+                }, { passive: true });
+            };
+            bindBtn('mob-btn-atk', () => document.dispatchEvent(new MouseEvent('mousedown', { button: 0 })), () => document.dispatchEvent(new MouseEvent('mouseup', { button: 0 })));
+            bindBtn('mob-btn-block', () => document.dispatchEvent(new MouseEvent('mousedown', { button: 2 })), () => document.dispatchEvent(new MouseEvent('mouseup', { button: 2 })));
+            bindBtn('mob-btn-jump', () => document.dispatchEvent(new KeyboardEvent('keydown', { code: 'Space' })));
+            bindBtn('mob-btn-w1', () => document.dispatchEvent(new KeyboardEvent('keydown', { code: 'Digit1' })));
+            bindBtn('mob-btn-w2', () => document.dispatchEvent(new KeyboardEvent('keydown', { code: 'Digit2' })));
+            bindBtn('mob-btn-q', () => document.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyQ' })));
+            bindBtn('mob-btn-e', () => document.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyE' })));
+            bindBtn('mob-btn-r', () => document.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyR' })));
+        }
+        function enforceLandscapeFullscreen() {
+            if (!isMobile) return;
+            const doc = document.documentElement;
+            if (doc.requestFullscreen) doc.requestFullscreen().catch(e => console.log(e));
+            else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen().catch(e => console.log(e));
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(e => console.log("横屏锁定失败/不支持", e));
+            }
+        }
         function startMode(mode) {
+            enforceLandscapeFullscreen();
             initAudio(); gameState.mode = mode; gameState.wave = 1; gameState.health = gameState.maxHealth; gameState.shield = 0; gameState.totalSpawned = 0;
             uiMap.mainMenu.style.display = 'none'; updateSkillHUD(); buildWeaponModel(); startNextWave();
         }
         function startNextWave() {
             document.body.requestPointerLock(); isPlaying = true;
+            if (isMobile && document.getElementById('mobile-ui')) document.getElementById('mobile-ui').style.display = 'block';
             arrows.forEach(a => scene.remove(a.mesh)); arrows.length = 0; enemyProjectiles.forEach(p => scene.remove(p.mesh)); enemyProjectiles.length = 0;
             enemies.forEach(e => scene.remove(e.group)); enemies.length = 0; deadEnemies.forEach(e => scene.remove(e.group)); deadEnemies.length = 0;
             stuckArrows.forEach(m => { if (m.parent) m.parent.remove(m); }); stuckArrows.length = 0; gameState.arrowRains = [];
@@ -1661,7 +1864,7 @@
                     gameState.maxHealth = 100 + (hpLvl * 20);
                     gameState.health = gameState.maxHealth;
                 } catch (e) {
-                    console.error("元数据读取失败，已重置", e);
+                    console.error("初期化した", e);
                 }
             }
         }
@@ -1669,7 +1872,7 @@
             document.getElementById('btn-campaign').onclick = () => startMode('campaign');
             document.getElementById('btn-endless').onclick = () => startMode('endless');
             document.getElementById('btn-open-shop').onclick = () => { uiMap.mainMenu.style.display = 'none'; currentShopContext = 'menu'; renderShop(); };
-            document.getElementById('btn-continue').onclick = () => { uiMap.shopMenu.style.display = 'none'; startNextWave(); };
+            document.getElementById('btn-continue').onclick = () => { if (typeof enforceLandscapeFullscreen === 'function') enforceLandscapeFullscreen(); uiMap.shopMenu.style.display = 'none'; startNextWave(); };
             document.getElementById('btn-menu-return').onclick = () => { uiMap.shopMenu.style.display = 'none'; uiMap.mainMenu.style.display = 'flex'; };
             const btnReset = document.getElementById('btn-reset-save');
             if (btnReset) {
@@ -1677,7 +1880,7 @@
                     if (confirm("本当に全てのデータを削除しますか？")) {
                         localStorage.removeItem('rangerMetaProgression');
                         localStorage.removeItem('rangerSaveData');
-                        alert("データが初期化されました。(存档已清除，游戏将重新加载)");
+                        alert("データが初期化されました。");
                         location.reload();
                     }
                 };
@@ -1686,6 +1889,7 @@
         window.switchShopTab = function (tab) { currentShopTab = tab; const btns = document.querySelectorAll('.tab-btn'); btns.forEach(b => b.classList.remove('active')); event.target.classList.add('active'); renderShopContent(); };
         function renderShop() {
             uiMap.shopMenu.style.display = 'flex'; document.getElementById('shop-gold').innerText = gameState.gold; document.exitPointerLock(); isPlaying = false;
+            if (isMobile && document.getElementById('mobile-ui')) document.getElementById('mobile-ui').style.display = 'none';
             if (currentShopContext === 'dead') {
                 document.getElementById('shop-title').innerText = "ゲームオーバー"; document.getElementById('btn-continue').style.display = 'none'; document.getElementById('btn-menu-return').style.display = 'inline-block';
             }
@@ -1759,7 +1963,18 @@
             if (id === 'heal') { gameState.health = Math.min(gameState.maxHealth, gameState.health + 50); UPGRADES.find(u => u.id === 'heal').currentLvl--; }
         }
         function updateSkillHUD() {
-            for (let i = 0; i < 3; i++) { const slotDiv = document.getElementById(`slot-${i}`); const id = gameState.skillSlots[i]; slotDiv.querySelector('.name').innerText = id ? SKILL_TEMPLATES.find(x => x.id === id).name.substring(0, 2) : '空'; }
+            for (let i = 0; i < 3; i++) {
+                const slotDiv = document.getElementById(`slot-${i}`);
+                const id = gameState.skillSlots[i];
+                let shortName = '空';
+                if (id) {
+                    const fullName = SKILL_TEMPLATES.find(x => x.id === id).name;
+                    shortName = fullName.split(' ')[0].substring(0, 5);
+                }
+                if (slotDiv) slotDiv.querySelector('.name').innerText = shortName;
+                const mobBtn = document.getElementById(['mob-btn-q', 'mob-btn-e', 'mob-btn-r'][i]);
+                if (mobBtn) mobBtn.innerText = shortName;
+            }
         }
         function useSkill(slotIndex) {
             const skillId = gameState.skillSlots[slotIndex]; if (!skillId || gameState.skillCooldowns[slotIndex] > 0) return;
