@@ -842,7 +842,7 @@
             const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 512;
             const ctx = canvas.getContext('2d'); ctx.fillStyle = '#3a6629'; ctx.fillRect(0, 0, 512, 512);
             for (let i = 0; i < 30000; i++) { ctx.fillStyle = Math.random() > 0.5 ? '#427530' : '#2b4d1f'; ctx.fillRect(Math.random() * 512, Math.random() * 512, 2, 6); }
-            const tex = new THREE.CanvasTexture(canvas); tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(60, 60); tex.generateMipmaps = false; renderer.initTexture(tex); return tex;
+            const tex = new THREE.CanvasTexture(canvas); tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(60, 60); tex.generateMipmaps = false; tex.minFilter = THREE.LinearFilter; tex.needsUpdate = true; return tex;
         }
         function createStoneTexture() {
             const canvas = document.createElement('canvas'); canvas.width = 256; canvas.height = 256; const ctx = canvas.getContext('2d');
